@@ -1,0 +1,33 @@
+# Dependency directories
+node_modules/
+
+# Environment configuration files
+.env
+
+# Log files
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Editor directories and files
+.vscode/
+.idea/
+
+# Build output (if applicable, e.g., compiled files)
+dist/
+build/
+
+# Test coverage reports
+coverage/
+
+# Temporary files
+*.tmp
+*.swp
+
+# Package lock files (optional; include if using npm)
+package-lock.json
+
+# Package manager lock files (optional; include if using yarn)
+yarn.lock
