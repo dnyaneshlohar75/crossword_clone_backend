@@ -29,7 +29,7 @@ const addToCartController = async (req, res) => {
     }
 
     await existingCart.save();
-    return res.status(200).json({ message: "Product added to cart successfully", success: true });
+    return res.status(200).json({ message: "Product added to cart successfully", success: true, carts: existingCart });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });

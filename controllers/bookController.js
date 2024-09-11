@@ -1,4 +1,5 @@
 const Book = require("../models/bookModel");
+const Review = require("../models/reviewModel");
 
 const addbookController = async (req, res) => {
   console.log(req.body);
@@ -12,7 +13,7 @@ const addbookController = async (req, res) => {
       price: req.body.price,
       author: req.body.author,
       discount: req.body.discount,
-      description: req.body.description
+      description: req.body.description,
     });
 
     await book.save();
@@ -62,21 +63,21 @@ const getBooksByCategoryController = async (req, res) => {
 };
 
 const getBookById = async (req, res) => {
-    const productId = req.params.id;
+  const productId = req.params.id;
 
-    try {
-        const book = await Book.findById(productId);
-    
-        return res.json({
-            message: "Fetched..",
-            book
-        })
-    } catch(err) {
-        console.log(err.message)
-        return res.json({
-            message: err.message
-        })
-    }
+  try {
+    const book = await Book.findById(productId);
+
+    return res.json({
+      message: "Fetched..",
+      book,
+    });
+  } catch (err) {
+    console.log(err.message);
+    return res.json({
+      message: err.message,
+    });
+  }
 };
 
 const getAllBooks = async (req, res) => {
@@ -118,10 +119,42 @@ const removeBookController = async (req, res) => {
   }
 };
 
+const reviewController = async (req, res) => {
+  const { productId, title, content, rating, name, email } = req.body;
+
+  try {
+    await Review.create({
+      productId,
+      title,
+      content,
+      rating,
+      displayName: name,
+      emailId: email,
+    });
+
+    return res
+      .json({
+        success: true,
+        message: `You reviewed ${productId}`,
+      })
+      .status(201);
+  } catch (err) {
+    console.log(err.message);
+
+    return res
+      .json({
+        success: false,
+        message: "Review error.",
+      })
+      .status(500);
+  }
+};
+
 module.exports = {
   addbookController,
   getAllBooks,
   removeBookController,
   getBooksByCategoryController,
   getBookById,
+  reviewController,
 };

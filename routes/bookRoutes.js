@@ -1,5 +1,5 @@
 const express = require('express');
-const { addbookController,removeBookController, getBooksByCategoryController,  getBookById, getAllBooks } = require('../controllers/bookController');
+const { reviewController, addbookController,removeBookController, getBooksByCategoryController,  getBookById, getAllBooks } = require('../controllers/bookController');
 const Book = require('../models/bookModel');
 
 const router = express.Router();
@@ -41,5 +41,7 @@ router.get('/find/:name?/:author?', async (req, res) => {
         message: "Books not found..",
     }).status(404)
 })
+
+router.post("/review", reviewController);
 
 module.exports = router;
