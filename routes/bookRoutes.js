@@ -1,46 +1,49 @@
-const express = require('express');
-const { reviewController, addbookController,removeBookController, getBooksByCategoryController,  getBookById, getAllBooks } = require('../controllers/bookController');
-const Book = require('../models/bookModel');
+const express = require("express");
+const {
+  reviewController,
+  addbookController,
+  removeBookController,
+  getBooksByCategoryController,
+  getBookById,
+  getAllBooks,
+} = require("../controllers/bookController");
+const Book = require("../models/bookModel");
 
 const router = express.Router();
 
-router.post('/addbook', addbookController);
+router.post("/addbook", addbookController);
 
-router.get('/category/:category', getBooksByCategoryController);
+router.get("/category/:category", getBooksByCategoryController);
 
-router.get('/allbook',  getAllBooks);
+router.get("/allbook", getAllBooks);
 
-router.get("/:id", getBookById)
+router.get("/:id", getBookById);
 
-router.delete('/removebook', removeBookController);
+router.delete("/removebook", removeBookController);
 
-router.get('/find/:name?/:author?', async (req, res) => {
+router.get("/find/:query",async (req, res) => {
 
-    const { name, author } = req.params;
-    const query = {};
-
-    if (name) {
-        query.name = { $regex: new RegExp(name, "i") };
-      }
-      if (author) {
-        query.category = { $regex: new RegExp(author, "i") };
-      }
-
-    const allBooks = await Book.find(query);
-
-    if(allBooks) {
-        return res.json({
-            success: true,
-            message: "All  books fetched..",
-            books: allBooks
-        }).status(200);
+    const { query } = req.params;
+    try {
+      const books = await Book.find({
+        $or: [
+          { name: { $regex: query, $options: "i" } },
+          { author: { $regex: query, $options: "i" } },
+        ],
+      });
+      return res.json({
+        message: "found",
+        success: true,
+        books
+      });
+    } catch (error) {
+      console.error("Error searching:", error);
+      return res.json({
+        success: false
+      })
     }
-
-    return res.json({
-        success: false,
-        message: "Books not found..",
-    }).status(404)
-})
+  }
+);
 
 router.post("/review", reviewController);
 
