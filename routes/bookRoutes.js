@@ -6,8 +6,11 @@ const {
   getBooksByCategoryController,
   getBookById,
   getAllBooks,
+  getReviewsByIdController,
 } = require("../controllers/bookController");
 const Book = require("../models/bookModel");
+const Review = require("../models/reviewModel");
+const { Schema } = require("mongoose");
 
 const router = express.Router();
 
@@ -44,6 +47,24 @@ router.get("/find/:query",async (req, res) => {
     }
   }
 );
+
+router.get("/reviews/:productId", async (req, res) => {
+  const { productId } = req.params;
+
+  try {
+    const reviews = await Review.find({productId});
+
+    res.json({
+      success: true,
+      message: `Reviews fetched of ${productId}`,
+      reviews: reviews
+    }).status(200)
+
+  } catch(err) {
+    console.log(err.message)
+    return res.json({success: false, message: `error: ${err.message}`}).status(500)
+  }
+});
 
 router.post("/review", reviewController);
 

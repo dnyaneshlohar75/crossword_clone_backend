@@ -150,6 +150,10 @@ const reviewController = async (req, res) => {
   }
 };
 
+const getReviewsByIdController = async (req, res) => {
+
+}
+
 module.exports = {
   addbookController,
   getAllBooks,
@@ -157,4 +161,5 @@ module.exports = {
   getBooksByCategoryController,
   getBookById,
   reviewController,
+  getReviewsByIdController
 };
