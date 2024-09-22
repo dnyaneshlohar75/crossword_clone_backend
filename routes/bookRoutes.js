@@ -10,7 +10,6 @@ const {
 } = require("../controllers/bookController");
 const Book = require("../models/bookModel");
 const Review = require("../models/reviewModel");
-const { Schema } = require("mongoose");
 
 const router = express.Router();
 
