@@ -1,6 +1,4 @@
-const Book = require('../models/bookModel');
 const Cart = require('../models/cartModel');
-const Users = require("../models/userModel");
 const Wishlist = require('../models/wishlistModel');
 
 const addToCartController = async (req, res) => {
@@ -41,8 +39,6 @@ const addToCartController = async (req, res) => {
     const { userId } = req.body;
   
     const wishlists = await Wishlist.find({ userId }).populate("products.product");
-
-    console.log(wishlists);
   
     if (wishlists) {
       return res.json({
@@ -64,7 +60,7 @@ const addToCartController = async (req, res) => {
 
   const addProductWishlist = async (req, res) => {
     try {
-      const { userId, productId, quantity = 1 } = req.body;
+      const { userId, productId } = req.body;
 
       console.log("Wishlist controller")
   
@@ -74,7 +70,7 @@ const addToCartController = async (req, res) => {
         const wishlist = new Wishlist({ userId, products: [] });
         await wishlist.save();
         
-        return res.status(201).json({ message: "Wishlist created successfully" });
+        res.status(201).json({ message: "Wishlist created successfully" });
       }
   
       const productIndex = existingWishlist.products.findIndex(
@@ -82,18 +78,22 @@ const addToCartController = async (req, res) => {
       );
   
       if (productIndex !== -1) {
-        existingCart.products[productIndex].quantity += quantity;
+        existingWishlist.products[productIndex].quantity += quantity;
       }    
       else {
         existingWishlist.products.push({ product: productId, quantity });
       }
   
       await existingWishlist.save();
-      res.status(200).json({ message: "Product added to wishlist successfully" });
+      return res.status(200).json({ message: "Product added to wishlist successfully", wishlist: existingWishlist });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Internal server error" });
+      return res.status(500).json({ error: "Internal server error" });
     }
+
+  }
+
+  const removeProductWishlist = async (req, res) => {
 
   }
 
@@ -125,5 +125,6 @@ module.exports = {
     addToCartController,
     myWishlistController,
     getAllCartsController,
-    addProductWishlist
+    addProductWishlist,
+    removeProductWishlist
 };
